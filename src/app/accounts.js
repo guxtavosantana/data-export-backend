@@ -1,12 +1,18 @@
 module.exports = async (req, res) => {
     const occ = require('./helpers/occ');
     const loginOcc = await occ.login();
-    // console.log(loginOcc.error);
+
     if (loginOcc.error) {
         res.status(loginOcc.error.status).send(loginOcc.error);
         return;
     }
 
-    res.send('logado');
-    console.log('logado');
+    const accountsOcc = await occ.accounts(loginOcc.access_token);
+
+    if (accountsOcc.error) {
+        res.status(accountsOcc.error.status).send(accountsOcc.error);
+        return;
+    }
+
+    res.send(accountsOcc);
 }
