@@ -17,7 +17,26 @@ module.exports.login = () => {
         data: data
     }
 
-    return axios(loginRequest)
+    return doRequest(loginRequest)
+}
+
+
+module.exports.accounts = (token, offset = 0, totalResults = 0) => {
+
+    const accountsRequest = {
+        method: 'get',
+        url: process.env.ADMIN_URL + '/ccadmin/v1/organizations?offset=' + offset + '&fields=id,name,active',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }
+
+    return doRequest(accountsRequest)
+}
+
+const doRequest = (request) => {
+    
+    return axios(request)
     .then((response) => {
         return response.data;
     }).catch((error) => {
