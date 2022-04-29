@@ -21,7 +21,7 @@ module.exports.login = () => {
 }
 
 
-module.exports.accounts = (token, offset = 0, totalResults = 0) => {
+module.exports.accounts = (token, offset = 0) => {
 
     const accountsRequest = {
         method: 'get',

@@ -14,5 +14,24 @@ module.exports = async (req, res) => {
         return;
     }
 
-    res.send(accountsOcc);
+    let accountsObj = [ accountsOcc.items ];
+    console.log("Total de contas", accountsOcc.totalResults);
+    
+    // faz as requisições com os demais offsets e os armazena em array.
+    let tempAccounts;
+    for (let i = 250; i <= accountsOcc.totalResults; i += 250) {
+        tempAccounts = await occ.accounts(loginOcc.access_token, i);
+        accountsObj.push(tempAccounts.items);
+        console.log("offset: " + i);
+    }
+
+    // estrutura o obj de forma mais adequada para ser exportado
+    let accounts = [];
+    for (let i = 0; i < accountsObj.length; i++) {
+        for (let j = 0; j < accountsObj[i].length; j++) {
+            accounts.push(accountsObj[i][j]);
+        }
+        
+    }
+    res.send(accounts);
 }
