@@ -34,6 +34,19 @@ module.exports.accounts = (token, offset = 0) => {
     return doRequest(accountsRequest)
 }
 
+module.exports.profiles = (token, offset = 0) => {
+    
+    const profilesRequest = {
+        method: 'get',
+        url: process.env.ADMIN_URL + '/ccadmin/v1/profiles?offset=' + offset + '&fields=id,email,repositoryId',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }
+
+    return doRequest(profilesRequest)
+}
+
 const doRequest = (request) => {
     
     return axios(request)
