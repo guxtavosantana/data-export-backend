@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     console.log("Total de contatos", profilesOcc.totalResults);
 
     // faz as requisições com os offsets e os armazena no array.
-    for (let i = 250; i <= 1000; i += 250) {
+    for (let i = 250; i <= profilesOcc.totalResults; i += 250) {
         let { items } = await occ.profiles(loginOcc.access_token, i);
         profiles.push(...items);
         console.log("offset: " + i);
