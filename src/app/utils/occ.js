@@ -38,7 +38,7 @@ module.exports.profiles = (token, offset = 0) => {
     
     const profilesRequest = {
         method: 'get',
-        url: process.env.ADMIN_URL + '/ccadmin/v1/profiles?offset=' + offset + '&fields=id,email,repositoryId',
+        url: process.env.ADMIN_URL + '/ccadmin/v1/profiles?offset=' + offset + '&fields=id,email,parentOrganization.id',
         headers: {
             'Authorization': `Bearer ${token}`
         }

@@ -1,5 +1,5 @@
 module.exports = async (req, res) => {
-    const occ = require('./helpers/occ');
+    const occ = require('./utils/occ');
     const loginOcc = await occ.login();
 
     if (loginOcc.error) {
@@ -14,24 +14,15 @@ module.exports = async (req, res) => {
         return;
     }
 
-    let profilesObj = [ profilesOcc.items ];
+    let profiles = [];
     console.log("Total de contatos", profilesOcc.totalResults);
 
-    // faz as requisições com os demais offsets e os armazena em array.
-    let tempProfiles;
-    for (let i = 250; i <= profilesOcc.totalResults; i += 250) {
-        tempProfiles = await occ.accounts(loginOcc.access_token, i);
-        profilesObj.push(tempProfiles.items);
+    // faz as requisições com os offsets e os armazena no array.
+    for (let i = 250; i <= 1000; i += 250) {
+        let { items } = await occ.profiles(loginOcc.access_token, i);
+        profiles.push(...items);
         console.log("offset: " + i);
     }    
 
-    // estrutura o obj de forma mais adequada para ser exportado
-    let profiles = [];
-    for (let i = 0; i < profilesObj.length; i++) {
-        for (let j = 0; j < profilesObj[i].length; j++) {
-            profiles.push(profilesObj[i][j]);
-        }
-        
-    }
     res.send(profiles);
 }

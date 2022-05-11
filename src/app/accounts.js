@@ -1,5 +1,5 @@
 module.exports = async (req, res) => {
-    const occ = require('./helpers/occ');
+    const occ = require('./utils/occ');
     const loginOcc = await occ.login();
 
     if (loginOcc.error) {
@@ -14,24 +14,15 @@ module.exports = async (req, res) => {
         return;
     }
 
-    let accountsObj = [ accountsOcc.items ];
+    let accounts = [];
     console.log("Total de contas", accountsOcc.totalResults);
     
-    // faz as requisições com os demais offsets e os armazena em array.
-    let tempAccounts;
-    for (let i = 250; i <= accountsOcc.totalResults; i += 250) {
-        tempAccounts = await occ.accounts(loginOcc.access_token, i);
-        accountsObj.push(tempAccounts.items);
+    // faz as requisições com os offsets e os armazena no array.
+    for (let i = 250; i <= 1000; i += 250) {
+        let { items } = await occ.accounts(loginOcc.access_token, i);
+        accounts.push(...items);
         console.log("offset: " + i);
     }
 
-    // estrutura o obj de forma mais adequada para ser exportado
-    let accounts = [];
-    for (let i = 0; i < accountsObj.length; i++) {
-        for (let j = 0; j < accountsObj[i].length; j++) {
-            accounts.push(accountsObj[i][j]);
-        }
-        
-    }
     res.send(accounts);
 }
